@@ -1,34 +1,5 @@
 import {Schema} from 'mongoose';
 
-export interface IAlbum {
-  name: string;
-  user: Schema.Types.ObjectId;
-  artist: Schema.Types.ObjectId;
-  release: string;
-  image?: string;
-  isPublished: boolean;
-}
-
-export interface IArtist {
-  name: string;
-  user: Schema.Types.ObjectId;
-  info: string;
-  image?: string;
-  isPublished: boolean;
-}
-
-export interface ITrack {
-  name: string;
-  user: Schema.Types.ObjectId;
-  album: Schema.Types.ObjectId;
-  youtubeLink?: string;
-  number: string;
-  duration?: string;
-  image?: string;
-  mp3File?: string;
-  isPublished: boolean;
-}
-
 export interface IUser {
   username: string;
   displayName: string;
@@ -39,8 +10,22 @@ export interface IUser {
   googleID?: string;
 }
 
-export interface ITracksHistory {
+export interface IRating {
+  rating: number;
   user: Schema.Types.ObjectId;
-  track: Schema.Types.ObjectId;
-  date: Schema.Types.Date;
+}
+
+export interface IIngredient {
+  name: string;
+  amount: string;
+}
+
+export interface ICocktail {
+  name: string;
+  user: Schema.Types.ObjectId;
+  image: string;
+  recipe: string;
+  isPublished?: boolean;
+  ingredients: IIngredient[];
+  ratings: IRating[];
 }
