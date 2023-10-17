@@ -1,8 +1,8 @@
-import mongoose, {Schema} from 'mongoose';
+import {Schema} from 'mongoose';
 import {User} from './User';
 import {IRating} from '../types';
 
-const RatingSchema = new Schema<IRating>({
+export const RatingSchema = new Schema<IRating>({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -19,5 +19,3 @@ const RatingSchema = new Schema<IRating>({
     required: true,
   },
 });
-
-export const Rating = mongoose.model('Rating', RatingSchema);

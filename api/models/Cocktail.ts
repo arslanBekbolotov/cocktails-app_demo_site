@@ -1,13 +1,22 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose, {HydratedDocument, Schema} from 'mongoose';
 import {User} from './User';
-import {Ingredient} from './Ingredient';
 import {ICocktail} from '../types';
-import {Rating} from './Rating';
+import {IngredientSchema} from './Ingredient';
+import {RatingSchema} from './Rating';
 
 const CocktailSchema = new Schema<ICocktail>({
   name: {
     type: String,
     required: true,
+    unique: true,
+    validate: {
+      validator: async function (this: HydratedDocument<ICocktail>, value: string) {
+        if (!this.isModified('name')) return true;
+        const cocktail = await Cocktail.findOne({name: value});
+        if (cocktail) return false;
+      },
+      message: 'This name is already taken',
+    },
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -26,9 +35,16 @@ const CocktailSchema = new Schema<ICocktail>({
     type: String,
     required: true,
   },
-  isPublished: Boolean,
-  ingredients: [Ingredient],
-  ratings: [Rating],
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  ingredients: {
+    type: [IngredientSchema],
+    required: true,
+  },
+  ratings: [RatingSchema],
 });
 
 export const Cocktail = mongoose.model('Cocktail', CocktailSchema);

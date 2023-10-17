@@ -1,7 +1,7 @@
-import mongoose, {Schema} from 'mongoose';
+import {Schema} from 'mongoose';
 import {IIngredient} from '../types';
 
-const IngredientSchema = new Schema<IIngredient>({
+export const IngredientSchema = new Schema<IIngredient>({
   name: {
     type: String,
     required: true,
@@ -11,5 +11,3 @@ const IngredientSchema = new Schema<IIngredient>({
     required: true,
   },
 });
-
-export const Ingredient = mongoose.model('Ingredient', IngredientSchema);
