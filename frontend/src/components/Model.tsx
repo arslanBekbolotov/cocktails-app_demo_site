@@ -43,7 +43,7 @@ const FormDialog: React.FC<Props> = ({text, setOpen, isOpen}) => {
     }
 
     return (
-        <Dialog open={isOpen} onClose={handleClose} fullWidth>
+        <Dialog open={isOpen} onClose={handleClose} fullWidth sx={{backgroundColor: '#121212'}}>
             <form onSubmit={searchCocktail}>
                 <DialogTitle>Search Cocktail</DialogTitle>
                 <DialogContent>

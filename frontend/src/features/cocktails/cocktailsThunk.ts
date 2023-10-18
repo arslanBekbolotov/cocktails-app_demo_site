@@ -3,6 +3,7 @@ import {axiosApi} from '../../axiosApi.ts';
 import {
     ICocktail,
     ICocktailApi,
+    ICocktailApiMutation,
     ICocktailMutation,
     ICocktailQuery,
     IRatingMutation,
@@ -66,22 +67,11 @@ export const createCocktail = createAsyncThunk<void, ICocktailApi, { rejectValue
     }
 );
 
-export const updateCocktail = createAsyncThunk<void, ICocktailApi, { rejectValue: ValidationError }>(
-    'cocktail/create',
+export const updateCocktail = createAsyncThunk<void, ICocktailApiMutation, { rejectValue: ValidationError }>(
+    'cocktail/update',
     async (cocktailMutation, {rejectWithValue}) => {
         try {
-            const formData = new FormData();
-            const keys = Object.keys(cocktailMutation) as (keyof ICocktailApi)[];
-
-            keys.forEach((key) => {
-                const value = cocktailMutation[key];
-
-                if (value) {
-                    formData.append(key, value);
-                }
-            });
-
-            await axiosApi.post(`cocktails/`, formData);
+            await axiosApi.put(`cocktails/${cocktailMutation._id}`, cocktailMutation);
         } catch (e) {
             if (isAxiosError(e) && e.response && e.response.status === 400) {
                 return rejectWithValue(e.response.data as ValidationError);

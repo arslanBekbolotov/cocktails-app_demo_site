@@ -67,7 +67,6 @@ cocktailsRouter.put(
     '/:id',
     auth,
     permit('admin', 'creator'),
-    imagesUpload.single('image'),
     async (req, res, next) => {
         try {
             const {id} = req.params;
@@ -77,7 +76,6 @@ cocktailsRouter.put(
             const cocktail = await Cocktail.findByIdAndUpdate(id, {
                 name,
                 recipe,
-                image: req.file && req.file.filename,
                 ingredients: parsedIngredients,
             });
 

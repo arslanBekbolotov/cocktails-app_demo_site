@@ -8,7 +8,7 @@ import FileInput from "../../../components/FileInput.tsx";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from '@mui/icons-material/Clear';
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import {createCocktail} from "../cocktailsThunk.ts";
+import {createCocktail, updateCocktail} from "../cocktailsThunk.ts";
 import FormDialog from "../../../components/Model.tsx";
 import {setOpen} from "../cocktailsSlice.ts";
 
@@ -36,7 +36,7 @@ const CocktailForm = () => {
 
             if (cocktail) {
                 setState(cocktail);
-                setIngredients(cocktail.ingredients);
+                setIngredients(JSON.parse(JSON.stringify(cocktail.ingredients)));
             }
         }
     }, [cocktail, pathname, setModelOpen]);
@@ -67,16 +67,21 @@ const CocktailForm = () => {
         }
     };
 
-    const handleChangeIngredient = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    const handleChangeIngredient = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        index: number
+    ) => {
         const {value, name} = e.target;
         const updatedIngredients = [...ingredients];
+
         if (name === 'name') {
-            updatedIngredients[index].name = value;
-        } else {
-            updatedIngredients[index].amount = value;
+            updatedIngredients[index] = {...updatedIngredients[index], name: value};
+        } else if (name === 'amount') {
+            updatedIngredients[index] = {...updatedIngredients[index], amount: value};
         }
+
         setIngredients(updatedIngredients);
-    }
+    };
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -87,15 +92,17 @@ const CocktailForm = () => {
                 const data = {...state, ingredients: str} as ICocktailApi;
                 await dispatch(createCocktail(data)).unwrap();
             }
-            // else {
-            //     const data = {
-            //         name: state.name,
-            //         recipe: state.recipe,
-            //         ingredients: str,
-            //     };
-            //
-            //     await dispatch(updateCocktail(data)).unwrap();
-            // }
+
+            if (cocktail) {
+                const data = {
+                    _id: cocktail?._id,
+                    name: state.name,
+                    recipe: state.recipe,
+                    ingredients: str,
+                };
+
+                await dispatch(updateCocktail(data)).unwrap();
+            }
 
             navigate('/');
         } catch {
@@ -144,7 +151,6 @@ const CocktailForm = () => {
                                         onChange={(e) => handleChangeIngredient(e, index)}
                                     />
                                     <TextField
-                                        required
                                         label="Amount"
                                         name="amount"
                                         value={item.amount}

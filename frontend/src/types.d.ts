@@ -81,6 +81,13 @@ export interface ICocktailApi extends ICocktailForm {
     ingredients: string;
 }
 
+export interface ICocktailApiMutation {
+    _id: string;
+    name: string;
+    recipe: string;
+    ingredients: string;
+}
+
 export interface ICocktailMutation {
     cocktail: ICocktail;
     rating?: IRating;
