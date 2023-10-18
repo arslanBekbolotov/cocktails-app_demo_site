@@ -1,5 +1,3 @@
-
-
 export interface GlobalError {
     error: string;
 }
@@ -41,4 +39,54 @@ export interface ValidationError {
     message: string;
     name: string;
     _message: string;
+}
+
+export interface IRating {
+    _id: string;
+    rating: number;
+    user: string;
+}
+
+export interface IRatingMutation {
+    id: string;
+    rating: number;
+}
+
+export interface IIngredient {
+    _id: string;
+    name: string;
+    amount: string;
+}
+
+export type IIngredientMutation = Omit<IIngredient, '_id'>;
+
+export interface ICocktail {
+    _id: string;
+    name: string;
+    user: string;
+    image: string;
+    recipe: string;
+    isPublished?: boolean;
+    ingredients: IIngredient[];
+    ratings: IRating[];
+}
+
+export interface ICocktailForm {
+    name: string;
+    image: File | null;
+    recipe: string;
+}
+
+export interface ICocktailApi extends ICocktailForm {
+    ingredients: string;
+}
+
+export interface ICocktailMutation {
+    cocktail: ICocktail;
+    rating?: IRating;
+}
+
+export interface ICocktailQuery {
+    unpublished?: string;
+    userUnpublished?: string;
 }

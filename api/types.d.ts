@@ -17,7 +17,7 @@ export interface IRating {
 
 export interface IIngredient {
   name: string;
-  amount: string;
+  amount?: string;
 }
 
 export interface ICocktail {

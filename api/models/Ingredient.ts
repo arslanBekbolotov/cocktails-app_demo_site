@@ -6,8 +6,5 @@ export const IngredientSchema = new Schema<IIngredient>({
     type: String,
     required: true,
   },
-  amount: {
-    type: String,
-    required: true,
-  },
+  amount: String,
 });
