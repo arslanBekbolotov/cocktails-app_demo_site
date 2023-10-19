@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import {fetchCocktails} from "../../cocktailsThunk.ts";
+import {fetchAll} from "../../cocktailsThunk.ts";
 import {useAppDispatch, useAppSelector} from "../../../../app/hooks.ts";
 import {Box, Typography} from "@mui/material";
 import Spinner from "../../../../components/Spinner.tsx";
@@ -7,11 +7,11 @@ import TableItem from "./TableItem.tsx";
 
 const AdminTable = () => {
     const dispatch = useAppDispatch();
-    const {query, fetchLoading, cocktails} = useAppSelector(state => state.cocktailsStore)
+    const {fetchLoading, cocktails} = useAppSelector(state => state.cocktailsStore)
 
     useEffect(() => {
-        dispatch(fetchCocktails('all'));
-    }, [dispatch, query]);
+        dispatch(fetchAll());
+    }, [dispatch]);
 
     return (
         <div>

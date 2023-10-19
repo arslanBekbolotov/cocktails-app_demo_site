@@ -6,10 +6,9 @@ const Navbar = () => {
     const dispatch = useAppDispatch();
     const items = [
         {name: 'Published', query: ""},
-        {name: 'Your Published', query: 'userCocktails'},
         {name: 'Your Unpublished', query: "userUnpublished"},
     ];
-    
+
     const onClick = (query: string) => {
         dispatch(setQuery(query));
     }

@@ -5,8 +5,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import PublishRoundedIcon from '@mui/icons-material/PublishRounded';
 import UnpublishedRoundedIcon from '@mui/icons-material/UnpublishedRounded';
 import IconButton from "@mui/material/IconButton";
-import {useAppDispatch, useAppSelector} from "../../../../app/hooks.ts";
-import {deleteCocktail, fetchCocktails, patchPublish} from "../../cocktailsThunk.ts";
+import {useAppDispatch} from "../../../../app/hooks.ts";
+import {deleteCocktail, fetchAll, patchPublish} from "../../cocktailsThunk.ts";
 import MouseOverPopover from "../../../../components/Popover.tsx";
 
 interface Props {
@@ -15,8 +15,7 @@ interface Props {
 
 const TableItem: React.FC<Props> = ({cocktail}) => {
     const dispatch = useAppDispatch();
-    const query = useAppSelector(state => state.cocktailsStore.query);
-    
+
     const formatName = (name: string) => {
         const splitName = name.split(' ');
         return splitName.map((word) => word[0].toUpperCase() + word.slice(1)).join(' ');
@@ -24,18 +23,26 @@ const TableItem: React.FC<Props> = ({cocktail}) => {
 
     const handleDelete = async () => {
         await dispatch(deleteCocktail(cocktail._id));
-        await dispatch(fetchCocktails(query));
+        await dispatch(fetchAll());
     };
 
     const handlePublish = async () => {
         await dispatch(patchPublish(cocktail._id));
-        await dispatch(fetchCocktails(query));
+        await dispatch(fetchAll());
     };
 
     return (
         <div style={{marginBottom: '20px'}}>
             <Card
-                sx={{maxWidth: 505, borderRadius: '20px', display: 'flex', alignItems: "center", mx: 'auto', justifyContent: 'flex-start', p: '10px 10px'}}>
+                sx={{
+                    maxWidth: 505,
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: "center",
+                    mx: 'auto',
+                    justifyContent: 'flex-start',
+                    p: '10px 10px'
+                }}>
                 <CardMedia
                     component="img"
                     height="80"

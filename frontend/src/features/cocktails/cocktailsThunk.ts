@@ -4,6 +4,7 @@ import {
     ICocktail,
     ICocktailApi,
     ICocktailApiMutation,
+    ICocktailData,
     ICocktailMutation,
     IRatingMutation,
     ValidationError
@@ -11,17 +12,32 @@ import {
 import {RootState} from "../../app/store.ts";
 import {isAxiosError} from "axios";
 
-export const fetchCocktails = createAsyncThunk<ICocktail[], string | undefined, {
+interface fetchProps {
+    query?: string;
+    page?: number;
+}
+
+export const fetchCocktails = createAsyncThunk<ICocktailData, fetchProps, {
     state: RootState
 }>(
-    'cocktail/fetchAll',
-    async (queryData, {getState}) => {
+    'cocktail/fetch',
+    async ({query, page}, {getState}) => {
         const userId = getState().usersStore.user?._id;
-        const {data} = await axiosApi<ICocktail[]>(
-            `cocktails?${queryData ? queryData + '=' + userId : ""}`);
+        const {data} = await axiosApi<ICocktailData>(
+            `cocktails?userUnpublished=${query ? userId : ''}&page=${page}`);
+
         return data;
     },
 );
+
+export const fetchAll = createAsyncThunk<ICocktail[], void, { state: RootState }>(
+    'cocktail/fetchAll',
+    async () => {
+        const {data} = await axiosApi<ICocktail[]>(`cocktails?all=${true}`);
+        return data;
+    },
+);
+
 
 export const fetchOneCocktail = createAsyncThunk<ICocktailMutation, string, {
     state: RootState

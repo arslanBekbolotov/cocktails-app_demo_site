@@ -91,9 +91,7 @@ const CocktailForm = () => {
             if (pathname !== '/edit') {
                 const data = {...state, ingredients: str} as ICocktailApi;
                 await dispatch(createCocktail(data)).unwrap();
-            }
-
-            if (cocktail) {
+            } else if (pathname === '/edit' && cocktail) {
                 const data = {
                     _id: cocktail?._id,
                     name: state.name,
@@ -184,7 +182,7 @@ const CocktailForm = () => {
                             helperText={getFieldError('recipe')}
                         />
                     </Grid>
-                    {!cocktail && <Grid item xs={12} sx={{pt: '16px'}}>
+                    {pathname !== '/edit' && <Grid item xs={12} sx={{pt: '16px'}}>
                         <FileInput onChange={filesInputChangeHandler} name={'image'} label="image"/>
                     </Grid>}
                     <Grid container item xs={12} justifyContent="center">

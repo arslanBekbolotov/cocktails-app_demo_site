@@ -71,6 +71,12 @@ export interface ICocktail {
     ratings: IRating[];
 }
 
+export interface ICocktailData {
+    totalPages: number;
+    cocktails: ICocktail[];
+    currentPage: number;
+}
+
 export interface ICocktailForm {
     name: string;
     image: File | null;

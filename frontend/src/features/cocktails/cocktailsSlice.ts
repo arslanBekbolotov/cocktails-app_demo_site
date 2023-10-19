@@ -1,10 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ICocktail, ValidationError} from '../../types';
-import {createCocktail, fetchCocktails, fetchOneCocktail, patchRating} from './cocktailsThunk.ts';
+import {createCocktail, fetchAll, fetchCocktails, fetchOneCocktail, patchRating} from './cocktailsThunk.ts';
 import {RootState} from "../../app/store.ts";
 
 interface CocktailsState {
     cocktails: ICocktail[];
+    totalPages: number;
     cocktail: ICocktail | null;
     userLastRating: number;
     isOpen: boolean;
@@ -19,6 +20,7 @@ interface CocktailsState {
 
 const initialState: CocktailsState = {
     cocktails: [],
+    totalPages: 1,
     cocktail: null,
     userLastRating: 0,
     isOpen: false,
@@ -46,11 +48,24 @@ const cocktailsSlice = createSlice({
         builder.addCase(fetchCocktails.pending, (state) => {
             state.fetchLoading = true;
         });
-        builder.addCase(fetchCocktails.fulfilled, (state, {payload: cocktails}) => {
+        builder.addCase(fetchCocktails.fulfilled, (state, {payload: data}) => {
+            state.fetchLoading = false;
+            state.cocktails = data.cocktails;
+            state.totalPages = data.totalPages;
+        });
+        builder.addCase(fetchCocktails.rejected, (state) => {
+            state.fetchLoading = false;
+            state.error = true;
+        });
+
+        builder.addCase(fetchAll.pending, (state) => {
+            state.fetchLoading = true;
+        });
+        builder.addCase(fetchAll.fulfilled, (state, {payload: cocktails}) => {
             state.fetchLoading = false;
             state.cocktails = cocktails;
         });
-        builder.addCase(fetchCocktails.rejected, (state) => {
+        builder.addCase(fetchAll.rejected, (state) => {
             state.fetchLoading = false;
             state.error = true;
         });

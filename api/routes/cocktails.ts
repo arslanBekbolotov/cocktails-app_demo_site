@@ -9,16 +9,21 @@ const cocktailsRouter = express.Router();
 
 cocktailsRouter.get('/', async (req, res, next) => {
     try {
-        const {userUnpublished, userCocktails, all} = req.query;
+        const {page = 1, userUnpublished, all} = req.query;
+        const limit = 4;
 
-        if (userCocktails) {
-            const cocktails = await Cocktail.find({user: userCocktails, isPublished: true});
-            return res.send(cocktails);
+        const count = await Cocktail.find({isPublished: true}).count();
+        const result = {
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
         }
 
         if (userUnpublished) {
-            const cocktails = await Cocktail.find({user: userUnpublished, isPublished: false});
-            return res.send(cocktails);
+            const cocktails = await Cocktail.find({
+                user: userUnpublished,
+                isPublished: false
+            }).skip((+page - 1) * limit).limit(limit);
+            return res.send({...result, cocktails});
         }
 
         if (all) {
@@ -26,8 +31,8 @@ cocktailsRouter.get('/', async (req, res, next) => {
             return res.send(cocktails);
         }
 
-        const cocktails = await Cocktail.find({isPublished: true});
-        return res.send(cocktails);
+        const cocktails = await Cocktail.find({isPublished: true}).skip((+page - 1) * limit).limit(limit);
+        return res.send({...result, cocktails});
     } catch (error) {
         next(error);
     }
@@ -38,6 +43,11 @@ cocktailsRouter.get('/:id', async (req, res, next) => {
         const {id} = req.params;
 
         const cocktail = await Cocktail.findById(id);
+
+        if (!cocktail) {
+            return res.status(404).send({error: 'not found'});
+        }
+
         return res.send(cocktail);
     } catch (error) {
         next(error);
