@@ -88,12 +88,13 @@ export interface ICocktailApiMutation {
     ingredients: string;
 }
 
+export interface IQuery {
+    name: string;
+    query: string;
+}
+
 export interface ICocktailMutation {
     cocktail: ICocktail;
     rating?: IRating;
 }
 
-export interface ICocktailQuery {
-    unpublished?: string;
-    userUnpublished?: string;
-}

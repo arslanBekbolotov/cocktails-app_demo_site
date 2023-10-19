@@ -8,6 +8,7 @@ interface CocktailsState {
     cocktail: ICocktail | null;
     userLastRating: number;
     isOpen: boolean;
+    query: string;
     fetchLoading: boolean;
     createLoading: boolean;
     deleteLoading: string;
@@ -21,6 +22,7 @@ const initialState: CocktailsState = {
     cocktail: null,
     userLastRating: 0,
     isOpen: false,
+    query: "",
     fetchLoading: false,
     createLoading: false,
     deleteLoading: '',
@@ -36,6 +38,9 @@ const cocktailsSlice = createSlice({
         setOpen(state, {payload}) {
             state.isOpen = payload;
         },
+        setQuery(state, {payload}) {
+            state.query = payload;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCocktails.pending, (state) => {
@@ -91,7 +96,6 @@ const cocktailsSlice = createSlice({
 });
 
 export const cocktailsReducer = cocktailsSlice.reducer;
-export const {setOpen} = cocktailsSlice.actions;
+export const {setOpen, setQuery} = cocktailsSlice.actions;
 
 export const selectFetchOneLoading = (state: RootState) => state.cocktailsStore.fetchLoading;
-export const selectCocktail = (state: RootState) => state.cocktailsStore.cocktail;

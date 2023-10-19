@@ -72,8 +72,11 @@ const UserMenu: React.FC<Props> = ({user}) => {
                 <MenuItem>
                     <Link to='/create'>Create</Link>
                 </MenuItem>
-                {<MenuItem>
+                {user.role === 'admin' && <MenuItem>
                     <Link to='/edit'>Search & Edit</Link>
+                </MenuItem>}
+                {user.role === 'admin' && <MenuItem>
+                    <Link to='/adminTable'>Admin Table</Link>
                 </MenuItem>}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>

@@ -9,15 +9,20 @@ const cocktailsRouter = express.Router();
 
 cocktailsRouter.get('/', async (req, res, next) => {
     try {
-        const {unpublished, userUnpublished} = req.query;
+        const {userUnpublished, userCocktails, all} = req.query;
+
+        if (userCocktails) {
+            const cocktails = await Cocktail.find({user: userCocktails, isPublished: true});
+            return res.send(cocktails);
+        }
 
         if (userUnpublished) {
             const cocktails = await Cocktail.find({user: userUnpublished, isPublished: false});
             return res.send(cocktails);
         }
 
-        if (unpublished) {
-            const cocktails = await Cocktail.find({isPublished: false});
+        if (all) {
+            const cocktails = await Cocktail.find();
             return res.send(cocktails);
         }
 
@@ -66,7 +71,7 @@ cocktailsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, n
 cocktailsRouter.put(
     '/:id',
     auth,
-    permit('admin', 'creator'),
+    permit('admin'),
     async (req, res, next) => {
         try {
             const {id} = req.params;
@@ -90,7 +95,7 @@ cocktailsRouter.put(
     },
 );
 
-cocktailsRouter.patch('/:id', auth, async (req, res, next) => {
+cocktailsRouter.patch('/:id/rate', auth, async (req, res, next) => {
     try {
         const {id} = req.params;
         const user = (req as IRequestWithUser).user;
@@ -120,6 +125,23 @@ cocktailsRouter.patch('/:id', auth, async (req, res, next) => {
         next(error);
     }
 });
+
+cocktailsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        const cocktail = await Cocktail.findById(id);
+
+        if (!cocktail) {
+            return res.status(404).send({error: 'Cocktail not found'});
+        }
+
+        await Cocktail.findByIdAndUpdate(id, {isPublished: !cocktail.isPublished});
+
+        return res.send({message: 'success'});
+    } catch (error) {
+        next(error);
+    }
+})
 
 cocktailsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
     try {

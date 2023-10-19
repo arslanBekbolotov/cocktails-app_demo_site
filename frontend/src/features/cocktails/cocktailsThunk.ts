@@ -5,26 +5,27 @@ import {
     ICocktailApi,
     ICocktailApiMutation,
     ICocktailMutation,
-    ICocktailQuery,
     IRatingMutation,
     ValidationError
 } from '../../types';
 import {RootState} from "../../app/store.ts";
 import {isAxiosError} from "axios";
 
-export const fetchCocktails = createAsyncThunk<ICocktail[], ICocktailQuery | undefined>(
+export const fetchCocktails = createAsyncThunk<ICocktail[], string | undefined, {
+    state: RootState
+}>(
     'cocktail/fetchAll',
-    async (query) => {
+    async (queryData, {getState}) => {
+        const userId = getState().usersStore.user?._id;
         const {data} = await axiosApi<ICocktail[]>(
-            `cocktails?unpublished=${query ? query.unpublished : ''}&userUnpublished=${
-                query ? query.userUnpublished : ''
-            }`,
-        );
+            `cocktails?${queryData ? queryData + '=' + userId : ""}`);
         return data;
     },
 );
 
-export const fetchOneCocktail = createAsyncThunk<ICocktailMutation, string, { state: RootState }>(
+export const fetchOneCocktail = createAsyncThunk<ICocktailMutation, string, {
+    state: RootState
+}>(
     'cocktail/fetchOne',
     async (id, {getState}) => {
         const user = getState().usersStore.user;
@@ -37,11 +38,20 @@ export const fetchOneCocktail = createAsyncThunk<ICocktailMutation, string, { st
 export const patchRating = createAsyncThunk<void, IRatingMutation>(
     'cocktail/patchRating',
     async ({id, rating}) => {
-        await axiosApi.patch(`cocktails/${id}`, {rating});
+        await axiosApi.patch(`cocktails/${id}/rate`, {rating});
     },
 );
 
-export const createCocktail = createAsyncThunk<void, ICocktailApi, { rejectValue: ValidationError }>(
+export const patchPublish = createAsyncThunk<void, string>(
+    'cocktail/patchPublish',
+    async (id) => {
+        await axiosApi.patch(`cocktails/${id}/togglePublished`);
+    },
+);
+
+export const createCocktail = createAsyncThunk<void, ICocktailApi, {
+    rejectValue: ValidationError
+}>(
     'cocktail/create',
     async (cocktailMutation, {rejectWithValue}) => {
         try {
@@ -67,7 +77,9 @@ export const createCocktail = createAsyncThunk<void, ICocktailApi, { rejectValue
     }
 );
 
-export const updateCocktail = createAsyncThunk<void, ICocktailApiMutation, { rejectValue: ValidationError }>(
+export const updateCocktail = createAsyncThunk<void, ICocktailApiMutation, {
+    rejectValue: ValidationError
+}>(
     'cocktail/update',
     async (cocktailMutation, {rejectWithValue}) => {
         try {
@@ -81,3 +93,10 @@ export const updateCocktail = createAsyncThunk<void, ICocktailApiMutation, { rej
         }
     }
 );
+
+export const deleteCocktail = createAsyncThunk<void, string>(
+    'cocktail/delete',
+    async (id) => {
+        await axiosApi.delete(`cocktails/${id}`);
+    }
+)
