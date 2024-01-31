@@ -47,7 +47,7 @@ const CocktailInfo = () => {
                                 component="img"
                                 height="300"
                                 sx={{backgroundSize: 'contain', objectFit: 'contain', borderRadius: '10px'}}
-                                image={cocktail ? `http://localhost:8001/${cocktail?.image}` : ''}
+                                image={cocktail ? cocktail?.image : ''}
                                 alt="cocktail picture"
                             />
                         </Box>

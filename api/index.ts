@@ -6,7 +6,7 @@ import usersRouter from './routes/users';
 import cocktailsRouter from './routes/cocktails';
 
 const app = express();
-const PORT = 8001;
+const PORT = process.env.PORT || 8080;
 const url = config.db || "";
 
 app.use(cors());

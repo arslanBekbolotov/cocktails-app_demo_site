@@ -3,9 +3,10 @@ import config from './config';
 import {User} from './models/User';
 import {randomUUID} from 'crypto';
 import {Cocktail} from './models/Cocktail';
+import {cloudinaryImageUploadMethod} from "./controller/uploader";
 
 const run = async () => {
-  await mongoose.connect(config.db);
+  await mongoose.connect(config.db || "");
   const db = mongoose.connection;
 
   try {
@@ -32,7 +33,7 @@ const run = async () => {
     },
   );
 
-  await Cocktail.create(
+  const [cocktail_1,cocktail_2, cocktail_3, cocktail_4, cocktail_5, cocktail_6] = await Cocktail.create(
     {
       name: 'Mojito',
       image: 'fixtures/mojito.png',
@@ -145,6 +146,13 @@ const run = async () => {
       ],
     },
   );
+
+  for (const cocktail of [cocktail_1,cocktail_2, cocktail_3, cocktail_4, cocktail_5, cocktail_6]) {
+    if(!cocktail.image) return;
+    const path = './public/' + cocktail.image;
+    const newImageUrl = await cloudinaryImageUploadMethod(path);
+    await Cocktail.findByIdAndUpdate(cocktail._id, { image: newImageUrl });
+  }
 
   await db.close();
 };

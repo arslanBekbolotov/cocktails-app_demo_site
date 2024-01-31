@@ -4,6 +4,7 @@ import auth, {IRequestWithUser} from '../middleware/auth';
 import permit from '../middleware/permit';
 import {imagesUpload} from '../multer';
 import mongoose, {Error} from 'mongoose';
+import {cloudinaryImageUploadMethod} from "../controller/uploader";
 
 const cocktailsRouter = express.Router();
 
@@ -61,11 +62,12 @@ cocktailsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, n
     const user = (req as IRequestWithUser).user;
     const {name, recipe, ingredients} = req.body;
     const parsedIngredients = JSON.parse(ingredients);
+    const image = await cloudinaryImageUploadMethod(req.file?.path || "");
 
     const cocktail = await Cocktail.create({
       name,
       user: user._id,
-      image: req.file && req.file.filename,
+      image,
       recipe,
       ingredients: parsedIngredients,
     });

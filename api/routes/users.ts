@@ -5,17 +5,20 @@ import config from '../config';
 import {OAuth2Client} from 'google-auth-library';
 import crypto from 'crypto';
 import {imagesUpload} from '../multer';
+import {cloudinaryImageUploadMethod} from "../controller/uploader";
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
 usersRouter.post('/', imagesUpload.single('avatar'), async (req, res, next) => {
   try {
+    const avatar = await cloudinaryImageUploadMethod(req.file?.path || "");
+
     const user = new User({
       username: req.body.username,
       password: req.body.password,
       displayName: req.body.displayName,
-      avatar: req.file && req.file.filename,
+      avatar,
     });
 
     user.generateToken();

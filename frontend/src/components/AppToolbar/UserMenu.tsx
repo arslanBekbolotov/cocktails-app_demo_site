@@ -41,7 +41,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
     }
   };
 
-  let avatar = user.avatar ? 'http://localhost:8001/' + user.avatar : '';
+  let avatar = user.avatar ? user.avatar : '';
   avatar = user.avatar?.includes('google') ? user.avatar : avatar;
 
   return (

@@ -44,7 +44,7 @@ const CocktailItem: React.FC<Props> = ({cocktail}) => {
           component="img"
           height="300"
           sx={{backgroundSize: 'contain', objectFit: 'contain'}}
-          image={`http://localhost:8001/${cocktail.image}`}
+          image={cocktail.image}
           alt="cocktail picture"
         />
         <CardContent onClick={handleClick}>

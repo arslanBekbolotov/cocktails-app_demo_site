@@ -48,7 +48,7 @@ const TableItem: React.FC<Props> = ({cocktail}) => {
           component="img"
           height="80"
           sx={{backgroundSize: 'contain', objectFit: 'contain', width: '30%'}}
-          image={`http://localhost:8001/${cocktail.image}`}
+          image={cocktail.image ? cocktail.image : ""}
           alt="cocktail picture"
         />
         <Grid container item alignItems="center">
