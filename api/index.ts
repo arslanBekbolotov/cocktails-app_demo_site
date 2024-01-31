@@ -7,6 +7,7 @@ import cocktailsRouter from './routes/cocktails';
 
 const app = express();
 const PORT = 8001;
+const url = config.db || "";
 
 app.use(cors());
 app.use(express.static('public'));
@@ -15,7 +16,7 @@ app.use('/users', usersRouter);
 app.use('/cocktails', cocktailsRouter);
 
 const run = async () => {
-  await mongoose.connect(config.db);
+  await mongoose.connect(url);
 
   app.listen(PORT, () => {
     console.log(`Server started on ${PORT} port!`);
