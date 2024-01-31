@@ -62,7 +62,8 @@ cocktailsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, n
     const user = (req as IRequestWithUser).user;
     const {name, recipe, ingredients} = req.body;
     const parsedIngredients = JSON.parse(ingredients);
-    const image = await cloudinaryImageUploadMethod(req.file?.path || "");
+    // @ts-ignore
+    const image = await cloudinaryImageUploadMethod(req.file?.path);
 
     const cocktail = await Cocktail.create({
       name,

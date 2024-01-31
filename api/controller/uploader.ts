@@ -1,6 +1,6 @@
 import {v2 as cloudinary} from 'cloudinary';
 
-export const cloudinaryImageUploadMethod = async (file: string) => {
+export const cloudinaryImageUploadMethod = async (file: string | undefined) => {
     return await new Promise((resolve, reject) => {
         try {
             cloudinary.uploader.upload(file, (err: unknown, res: {secure_url:string}) => {
