@@ -1,4 +1,4 @@
-import {Schema} from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 
 export interface IUser {
   username: string;
@@ -11,6 +11,7 @@ export interface IUser {
 }
 
 export interface IRating {
+  _id?: mongoose.ObjectId;
   rating: number;
   user: Schema.Types.ObjectId;
 }

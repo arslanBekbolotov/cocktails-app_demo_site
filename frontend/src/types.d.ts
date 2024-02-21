@@ -58,7 +58,11 @@ export interface IIngredient {
   amount: string;
 }
 
-export type IIngredientMutation = Omit<IIngredient, '_id'>;
+export interface IIngredientMutation {
+  unitId: string;
+  name: string;
+  amount: string;
+}
 
 export interface ICocktail {
   _id: string;
@@ -102,4 +106,9 @@ export interface IQuery {
 export interface ICocktailMutation {
   cocktail: ICocktail;
   rating?: IRating;
+}
+
+export interface IRatingsMutation {
+  ratings: IRating[];
+  userRating?: IRating;
 }

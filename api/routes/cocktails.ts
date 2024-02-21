@@ -4,7 +4,7 @@ import auth, {IRequestWithUser} from '../middleware/auth';
 import permit from '../middleware/permit';
 import {imagesUpload} from '../multer';
 import mongoose, {Error} from 'mongoose';
-import {cloudinaryImageUploadMethod} from "../controller/uploader";
+import {cloudinaryImageUploadMethod} from '../controller/uploader';
 
 const cocktailsRouter = express.Router();
 
@@ -52,6 +52,25 @@ cocktailsRouter.get('/:id', async (req, res, next) => {
     }
 
     return res.send(cocktail);
+  } catch (error) {
+    next(error);
+  }
+});
+
+cocktailsRouter.get('/ratings/:id', async (req, res, next) => {
+  try {
+    const cocktailId = req.params.id;
+    if (cocktailId) {
+      const cocktail = await Cocktail.findById(cocktailId);
+
+      if (!cocktail) {
+        return res.status(404).send({error: 'not found'});
+      }
+
+      return res.send(cocktail.ratings);
+    }
+
+    return res.status(404).send({error: 'Cocktail id is not defined'});
   } catch (error) {
     next(error);
   }

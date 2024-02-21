@@ -6,7 +6,9 @@ import {
   ICocktailApiMutation,
   ICocktailData,
   ICocktailMutation,
+  IRating,
   IRatingMutation,
+  IRatingsMutation,
   ValidationError,
 } from '../../types';
 import {RootState} from '../../app/store.ts';
@@ -51,6 +53,25 @@ export const fetchOneCocktail = createAsyncThunk<
   const {data} = await axiosApi<ICocktail>(`cocktails/${id}`);
   const rating = data?.ratings.find((item) => item.user === user?._id);
   return {cocktail: data, rating};
+});
+
+export const fetchCocktailRating = createAsyncThunk<
+  IRatingsMutation | undefined,
+  string,
+  {state: RootState}
+>('cocktail/fetchCocktailRating', async (id, {getState}) => {
+  try {
+    const userId = getState().usersStore.user?._id;
+    const {data} = await axiosApi<IRating[]>(`cocktails/ratings/${id}`);
+    const userRating = data.find((item) => item.user === userId);
+    const result: IRatingsMutation = {
+      ratings: data,
+      userRating,
+    };
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 export const patchRating = createAsyncThunk<void, IRatingMutation>(

@@ -11,6 +11,7 @@ import {useAppDispatch, useAppSelector} from '../../../app/hooks.ts';
 import {createCocktail, updateCocktail} from '../cocktailsThunk.ts';
 import FormDialog from '../../../components/Model.tsx';
 import {setOpen} from '../cocktailsSlice.ts';
+import {nanoid} from '@reduxjs/toolkit';
 
 const CocktailForm = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,9 @@ const CocktailForm = () => {
   const {createError, createLoading, isOpen, cocktail} = useAppSelector(
     (state) => state.cocktailsStore,
   );
-  const [ingredients, setIngredients] = useState<IIngredientMutation[]>([{name: '', amount: ''}]);
+  const [ingredients, setIngredients] = useState<IIngredientMutation[]>([
+    {unitId: nanoid(), name: '', amount: ''},
+  ]);
   const initialState =
     cocktail && pathname === '/edit'
       ? cocktail
@@ -55,7 +58,7 @@ const CocktailForm = () => {
   };
 
   const handleAddIngredient = () => {
-    setIngredients((prevState) => [...prevState, {name: '', amount: ''}]);
+    setIngredients((prevState) => [...prevState, {unitId: nanoid(), name: '', amount: ''}]);
   };
 
   const handleDeleteIngredient = (index: number) => {
@@ -82,12 +85,7 @@ const CocktailForm = () => {
     const {value, name} = e.target;
     const updatedIngredients = [...ingredients];
 
-    if (name === 'name') {
-      updatedIngredients[index] = {...updatedIngredients[index], name: value};
-    } else if (name === 'amount') {
-      updatedIngredients[index] = {...updatedIngredients[index], amount: value};
-    }
-
+    updatedIngredients[index] = {...updatedIngredients[index], [name]: value};
     setIngredients(updatedIngredients);
   };
 
@@ -147,7 +145,7 @@ const CocktailForm = () => {
             </Typography>
             <Box sx={{width: '100%', mb: '16px'}}>
               {ingredients.map((item, index) => (
-                <Grid container item xs={12} key={Math.random()} sx={{pt: '16px'}}>
+                <Grid container item xs={12} key={item.unitId} sx={{mb: '20px'}}>
                   <TextField
                     required
                     sx={{flexGrow: 1, mr: '10px'}}
@@ -162,17 +160,18 @@ const CocktailForm = () => {
                     value={item.amount}
                     onChange={(e) => handleChangeIngredient(e, index)}
                   />
-                  <IconButton
-                    aria-label="delete"
-                    sx={{p: '8px 16px', ml: '5px'}}
-                    onClick={() => handleDeleteIngredient(index)}
-                  >
-                    <ClearIcon />
-                  </IconButton>
+                  {index !== 0 && (
+                    <IconButton
+                      aria-label="delete"
+                      sx={{p: '8px 16px', ml: '5px'}}
+                      onClick={() => handleDeleteIngredient(index)}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  )}
                 </Grid>
               ))}
             </Box>
-
             <Grid container item justifyContent="flex-end">
               <Button variant="contained" sx={{ml: 'auto'}} onClick={handleAddIngredient}>
                 Add Ingredient
