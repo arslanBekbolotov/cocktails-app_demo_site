@@ -1,7 +1,7 @@
 import {Rating, Typography} from '@mui/material';
 import React, {useState} from 'react';
-import {fetchCocktailRating, patchRating} from '../cocktailsThunk.ts';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks.ts';
+import {fetchCocktailRating, patchRating} from '../features/cocktails/cocktailsThunk.ts';
+import {useAppDispatch, useAppSelector} from '../app/hooks.ts';
 
 interface Props {
   id: string;

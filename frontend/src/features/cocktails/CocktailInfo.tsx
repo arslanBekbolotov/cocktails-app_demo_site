@@ -5,7 +5,7 @@ import {useParams} from 'react-router-dom';
 import {Box, CardMedia, Grid, List, ListItem, Typography} from '@mui/material';
 import {IRating} from '../../types';
 import Spinner from '../../components/Spinner.tsx';
-import Rate from './components/Rate.tsx';
+import Rate from '../../components/Rate.tsx';
 
 const CocktailInfo = () => {
   const dispatch = useAppDispatch();

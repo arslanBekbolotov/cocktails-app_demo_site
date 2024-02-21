@@ -5,13 +5,12 @@ import SendIcon from '@mui/icons-material/Send';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {ICocktail, ICocktailApi, ICocktailForm, IIngredientMutation} from '../../../types';
 import FileInput from '../../../components/FileInput.tsx';
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks.ts';
 import {createCocktail, updateCocktail} from '../cocktailsThunk.ts';
 import FormDialog from '../../../components/Model.tsx';
 import {setOpen} from '../cocktailsSlice.ts';
 import {nanoid} from '@reduxjs/toolkit';
+import Ingredient from '../../../components/Ingredient.tsx';
 
 const CocktailForm = () => {
   const dispatch = useAppDispatch();
@@ -145,31 +144,12 @@ const CocktailForm = () => {
             </Typography>
             <Box sx={{width: '100%', mb: '16px'}}>
               {ingredients.map((item, index) => (
-                <Grid container item xs={12} key={item.unitId} sx={{mb: '20px'}}>
-                  <TextField
-                    required
-                    sx={{flexGrow: 1, mr: '10px'}}
-                    label="Name"
-                    name="name"
-                    value={item.name}
-                    onChange={(e) => handleChangeIngredient(e, index)}
-                  />
-                  <TextField
-                    label="Amount"
-                    name="amount"
-                    value={item.amount}
-                    onChange={(e) => handleChangeIngredient(e, index)}
-                  />
-                  {index !== 0 && (
-                    <IconButton
-                      aria-label="delete"
-                      sx={{p: '8px 16px', ml: '5px'}}
-                      onClick={() => handleDeleteIngredient(index)}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  )}
-                </Grid>
+                <Ingredient
+                  item={item}
+                  index={index}
+                  handleChangeIngredient={handleChangeIngredient}
+                  handleDeleteIngredient={handleDeleteIngredient}
+                />
               ))}
             </Box>
             <Grid container item justifyContent="flex-end">
