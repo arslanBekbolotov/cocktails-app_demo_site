@@ -5,6 +5,7 @@ import {
   fetchAll,
   fetchCocktailRating,
   fetchCocktails,
+  fetchMostPopularCocktails,
   fetchOneCocktail,
   patchRating,
 } from './cocktailsThunk.ts';
@@ -12,6 +13,7 @@ import {RootState} from '../../app/store.ts';
 
 interface CocktailsState {
   cocktails: ICocktail[];
+  mostPopularCocktails: ICocktail[];
   totalPages: number;
   cocktail: ICocktail | null;
   ratings: IRating[];
@@ -28,6 +30,7 @@ interface CocktailsState {
 
 const initialState: CocktailsState = {
   cocktails: [],
+  mostPopularCocktails: [],
   totalPages: 1,
   cocktail: null,
   ratings: [],
@@ -75,6 +78,18 @@ const cocktailsSlice = createSlice({
       state.cocktails = cocktails;
     });
     builder.addCase(fetchAll.rejected, (state) => {
+      state.fetchLoading = false;
+      state.error = true;
+    });
+
+    builder.addCase(fetchMostPopularCocktails.pending, (state) => {
+      state.fetchLoading = true;
+    });
+    builder.addCase(fetchMostPopularCocktails.fulfilled, (state, {payload: cocktails}) => {
+      state.fetchLoading = false;
+      state.mostPopularCocktails = cocktails;
+    });
+    builder.addCase(fetchMostPopularCocktails.rejected, (state) => {
       state.fetchLoading = false;
       state.error = true;
     });

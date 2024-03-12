@@ -19,6 +19,15 @@ interface fetchProps {
   page?: number;
 }
 
+export const fetchMostPopularCocktails = createAsyncThunk<ICocktail[]>(
+  'cocktail/fetchMostPopular',
+  async () => {
+    const {data} = await axiosApi<ICocktail[]>(`cocktails/mostPopular`);
+
+    return data;
+  },
+);
+
 export const fetchCocktails = createAsyncThunk<
   ICocktailData,
   fetchProps,

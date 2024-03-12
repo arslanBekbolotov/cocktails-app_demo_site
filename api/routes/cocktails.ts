@@ -41,6 +41,21 @@ cocktailsRouter.get('/', async (req, res, next) => {
   }
 });
 
+cocktailsRouter.get('/mostPopular/', async (req, res, next) => {
+  try {
+    const cocktail = await Cocktail.find().sort({'ratings.rating': 'asc'}).limit(4);
+    console.log(cocktail);
+
+    if (!cocktail) {
+      return res.status(404).send({error: 'not found'});
+    }
+
+    return res.send(cocktail);
+  } catch (error) {
+    next(error);
+  }
+});
+
 cocktailsRouter.get('/:id', async (req, res, next) => {
   try {
     const {id} = req.params;
